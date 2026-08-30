@@ -1,0 +1,17 @@
+package com.loan.loan_data_project.exception.enums;
+
+public enum ExceptionType {
+
+    MISSING_REQUIRED_FIELD,
+    INVALID_DATA_TYPE,
+    NEGATIVE_VALUE,
+    BALANCE_EXCEEDS_PRINCIPAL,
+    INVALID_DATE,
+    DUPLICATE_LOAN_ID,
+    INVALID_INTEREST_RATE,
+    INVALID_TERM,
+    INVALID_PAYMENT_STATUS,
+    INVALID_LOAN_STATUS,
+    INVALID_STATE,
+    VALIDATION_ERROR
+}

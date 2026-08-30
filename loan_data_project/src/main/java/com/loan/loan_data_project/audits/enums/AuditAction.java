@@ -1,0 +1,26 @@
+package com.loan.loan_data_project.audits.enums;
+
+public enum AuditAction {
+
+    FILE_UPLOADED,
+
+    LOAN_IMPORTED,
+
+    VALIDATION_FAILED,
+
+    EXCEPTION_CREATED,
+
+    AI_RECOMMENDATION_GENERATED,
+
+    AI_DECISION_RECORDED,
+
+    FIELD_CORRECTED,
+
+    EXCEPTION_RESOLVED,
+
+    EXCEPTION_REJECTED,
+
+    LOAN_VERIFIED,
+
+    VERIFIED_RECORDS_EXPORTED
+}
