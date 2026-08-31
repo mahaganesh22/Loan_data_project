@@ -17,7 +17,9 @@ from models import (
     SummaryResponse,
     utc_now,
 )
+
 app = FastAPI(title="Loan Data AI Review", version="1.0.0")
+
 @app.get("/health")
 def health():
     configured = openai_configured()
@@ -26,6 +28,7 @@ def health():
         "model": model_name(),
         "openaiConfigured": configured,
     }
+
 @app.post("/review", response_model=ReviewResponse)
 def review(request: ReviewRequest):
     try:
@@ -47,6 +50,7 @@ def review(request: ReviewRequest):
         classifiedSeverity=result.classifiedSeverity,
         conflictComparison=result.conflictComparison,
     )
+
 @app.post("/summarize", response_model=SummaryResponse)
 def summarize(request: SummaryRequest):
     try:
@@ -64,6 +68,7 @@ def summarize(request: SummaryRequest):
         classifiedSeverity=result.classifiedSeverity,
         openCount=len(request.exceptions),
     )
+
 @app.post("/rules", response_model=RuleResponse)
 def rules(request: RuleRequest):
     if not request.instruction.strip():

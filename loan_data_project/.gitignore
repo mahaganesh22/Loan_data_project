@@ -42,3 +42,4 @@ ai_review/.venv/
 ai_review/__pycache__/
 ai_review/**/__pycache__/
 *.pyc
+.env

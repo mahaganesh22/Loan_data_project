@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableLambda
 from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 from models import (
     ExceptionPayload,
@@ -64,25 +65,25 @@ RULE_PROMPT = ChatPromptTemplate.from_messages(
 
 
 def openai_api_key() -> str:
-    api_key = os.getenv("OPENAI_API_KEY", "").strip()
+    api_key = os.getenv("GEMINI_API_KEY", "").strip()
     if not api_key:
         raise MissingOpenAiKeyError(
-            "OPENAI_API_KEY is not set. Copy ai_review/.env.example to ai_review/.env "
+            "AI MODEL API_KEY is not set. Copy ai_review/.env.example to ai_review/.env "
             "and paste your OpenAI API key there, then restart the AI service."
         )
     return api_key
 
 
 def openai_configured() -> bool:
-    return bool(os.getenv("OPENAI_API_KEY", "").strip())
+    return bool(os.getenv("GEMINI_API_KEY", "").strip())
 
 
 def model_name() -> str:
-    return os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+    return os.getenv("GEMINI_MODEL", "gemini-3-flash-preview")
 
 
-def _llm() -> ChatOpenAI:
-    return ChatOpenAI(
+def _llm() -> ChatGoogleGenerativeAI:
+    return ChatGoogleGenerativeAI(
         model=model_name(),
         temperature=0,
         api_key=openai_api_key(),
