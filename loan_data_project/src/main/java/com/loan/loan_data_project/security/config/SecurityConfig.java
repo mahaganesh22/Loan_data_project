@@ -36,9 +36,6 @@ public class SecurityConfig {
     private final RestAuthenticationEntryPoint authenticationEntryPoint;
     private final RestAccessDeniedHandler accessDeniedHandler;
 
-    @Value("${FRONTEND_URL}")
-    private String frontendUrl;
-
     public SecurityConfig(
             CustomUserDetailsService customUserDetailsService,
             JwtAuthenticationFilter jwtAuthenticationFilter,
@@ -104,7 +101,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:5173",
                 "http://127.0.0.1:5173",
-                frontendUrl
+                "https://loan-data-project-9.onrender.com"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
