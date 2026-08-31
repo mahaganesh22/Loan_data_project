@@ -3,6 +3,8 @@ package com.loan.loan_data_project.security.config;
 import com.loan.loan_data_project.security.filter.JwtAuthenticationFilter;
 import com.loan.loan_data_project.security.handler.RestAccessDeniedHandler;
 import com.loan.loan_data_project.security.handler.RestAuthenticationEntryPoint;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,6 +35,9 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final RestAuthenticationEntryPoint authenticationEntryPoint;
     private final RestAccessDeniedHandler accessDeniedHandler;
+
+    @Value("${FRONTEND_URL}")
+    private String frontendUrl;
 
     public SecurityConfig(
             CustomUserDetailsService customUserDetailsService,
@@ -98,7 +103,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:5173",
-                "http://127.0.0.1:5173"
+                "http://127.0.0.1:5173",
+                frontendUrl
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
