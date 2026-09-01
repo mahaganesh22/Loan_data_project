@@ -48,20 +48,58 @@ public class AiReviewClient {
                 .body(AiRuleResponse.class));
     }
 
+    // private <T> T invoke(AiCall<T> call) {
+    //     try {
+    //         T response = call.execute();
+    //         if (response == null) {
+    //             throw new AiReviewUnavailableException();
+    //         }
+    //         return response;
+    //     } catch (RestClientResponseException ex) {
+    //         throw AiReviewErrorMapper.map(ex);
+    //     } catch (ResourceAccessException ex) {
+    //         throw AiReviewErrorMapper.map(ex);
+    //     } catch (RestClientException ex) {
+    //         throw new AiReviewUnavailableException(ex);
+    //     }
+    // }
+
     private <T> T invoke(AiCall<T> call) {
-        try {
-            T response = call.execute();
-            if (response == null) {
-                throw new AiReviewUnavailableException();
+
+        int maxAttempts = 3;
+
+        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                T response = call.execute();
+
+                if (response == null) {
+                    throw new AiReviewUnavailableException();
+                }
+
+                return response;
+
+            } catch (ResourceAccessException ex) {
+
+                if (attempt == maxAttempts) {
+                    throw AiReviewErrorMapper.map(ex);
+                }
+
+                try {
+                    Thread.sleep(2000L * attempt);
+                } catch (InterruptedException interruptedException) {
+                    Thread.currentThread().interrupt();
+                    throw AiReviewErrorMapper.map(ex);
+                }
+
+            } catch (RestClientResponseException ex) {
+                throw AiReviewErrorMapper.map(ex);
+
+            } catch (RestClientException ex) {
+                throw new AiReviewUnavailableException(ex);
             }
-            return response;
-        } catch (RestClientResponseException ex) {
-            throw AiReviewErrorMapper.map(ex);
-        } catch (ResourceAccessException ex) {
-            throw AiReviewErrorMapper.map(ex);
-        } catch (RestClientException ex) {
-            throw new AiReviewUnavailableException(ex);
         }
+
+        throw new AiReviewUnavailableException();
     }
 
     @FunctionalInterface
