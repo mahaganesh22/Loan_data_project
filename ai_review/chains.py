@@ -74,7 +74,7 @@ def openai_api_key() -> str:
     return api_key
 
 
-def openai_configured() -> bool:
+def aimodel_configured() -> bool:
     return bool(os.getenv("GEMINI_API_KEY", "").strip())
 
 
