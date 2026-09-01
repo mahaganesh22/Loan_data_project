@@ -3,7 +3,7 @@ from chains import (
     MissingOpenAiKeyError,
     build_review_prompt,
     model_name,
-    openai_configured,
+    aimodel_configured,
     review_runnable,
     rule_runnable,
     summary_runnable,
@@ -22,7 +22,7 @@ app = FastAPI(title="Loan Data AI Review", version="1.0.0")
 
 @app.get("/health")
 def health():
-    configured = openai_configured()
+    configured = aimodel_configured()
     return {
         "status": "ok" if configured else "missing_api_key",
         "model": model_name(),
@@ -31,13 +31,29 @@ def health():
 
 @app.post("/review", response_model=ReviewResponse)
 def review(request: ReviewRequest):
+    
     try:
         result = review_runnable.invoke({"exception": request.exception, "loan": request.loan})
     except MissingOpenAiKeyError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
-    except Exception as exc:  # noqa: BLE001
-        raise HTTPException(status_code=502, detail=f"AI review failed: {exc}") from exc
+    except Exception as exc:
+        print("AI REVIEW ERROR:", repr(exc))
+        raise HTTPException(
+            status_code=502,
+            detail=f"AI review failed: {exc}"
+        ) from exc
+    # except Exception as exc:
+    #     raise HTTPException(status_code=502, detail=f"AI review failed: {exc}") from exc
+
+
+    if result is None:
+        raise HTTPException(
+            status_code=502,
+            detail="AI model returned no structured review."
+        )
+    
     prompt = build_review_prompt(request.exception)
+
     return ReviewResponse(
         model=model_name(),
         generatedAt=utc_now(),
